@@ -71,6 +71,8 @@ class QMDP:
         return snext, reward
     
     def sparse_choice(self, probs, count, **kwargs):
+        if count>1:
+            pass
         if self.issparse:
             if probs.shape[1] == 1:
                 vals, _, p = scipy.sparse.find(probs)

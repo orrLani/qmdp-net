@@ -1,15 +1,17 @@
 """
 Script to train QMDP-net and evaluate the learned policy
 """
+import matplotlib.pyplot as plt
 
-from __future__ import absolute_import
-from __future__ import division
-from __future__ import print_function
+# from __future__ import absolute_import
+# from __future__ import division
+# from __future__ import print_function
 
 import os, sys, time
 import numpy as np
-import tensorflow as tf
-
+import tensorflow.compat.v1 as tf
+tf.disable_v2_behavior()
+from tensorpack.dataflow import PrefetchData
 import datafeed
 from qmdpnet import QMDPNet, QMDPNetPolicy
 from arguments import parse_args
@@ -45,6 +47,7 @@ def run_training(params):
     valid_iterator = df_valid.get_data()
 
     # built model into the default graph
+
     with tf.Graph().as_default():
         # build network for training
         network = QMDPNet(params, batch_size=params.batch_size, step_size=params.step_size)
@@ -89,7 +92,7 @@ def run_training(params):
     for epoch in range(params.epochs):
         training_loss = 0.0
         for step in range(train_feed.steps_in_epoch):
-            data = train_iterator.next()
+            data = next(train_iterator)
             feed_dict = {network.placeholders[i]: data[i] for i in range(len(network.placeholders))}
 
             _, loss, _ = sess.run([network.train_op, network.loss, network.update_belief_op],
@@ -102,7 +105,7 @@ def run_training(params):
         # accumulate loss over the enitre validation set
         valid_loss = 0.0
         for step in range(valid_feed.steps_in_epoch):  # params.validbatchsize
-            data = valid_iterator.next()
+            data = next(valid_iterator)
             assert step > 0 or np.isclose(data[3], 1.0).all()
             feed_dict = {network.placeholders[i]: data[i] for i in range(len(network.placeholders))}
             loss, _ = sess.run([network.loss, network.update_belief_op], feed_dict=feed_dict)
@@ -163,7 +166,10 @@ def run_training(params):
 
 
 def run_eval(params, modelfile):
-    # built model into the default graph
+    # built model into the
+    #
+    #
+    # default graph
     with tf.Graph().as_default():
         # build network for evaluation
         network = QMDPNet(params, batch_size=1, step_size=1)
@@ -183,7 +189,7 @@ def run_eval(params, modelfile):
         policy = QMDPNetPolicy(network, sess)
 
     # build dataflows
-    eval_feed = datafeed.Datafeed(params, filename=os.path.join(params.path, "test/data.hdf5"), mode="eval")
+    eval_feed = datafeed.Datafeed(params, filename="grid_10_world_0_0_0.example", mode="eval")
     df = eval_feed.build_eval_dataflow(policy=policy, repeats=params.eval_repeats)
     df.reset_state()
     time.sleep(0.2)
@@ -193,7 +199,7 @@ def run_eval(params, modelfile):
     expert_results = []
     network_results = []
     for eval_i in range(params.eval_samples):
-        res = eval_iterator.next()
+        res = next(eval_iterator)
         expert_results.append(res[:1]) # success, traj_len, collided, reward_sum
         network_results.append(res[1:])
 

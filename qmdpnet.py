@@ -1,6 +1,11 @@
+import matplotlib.pyplot as plt
 from tensorpack import graph_builder
-import tensorflow as tf
+
+import tensorflow.compat.v1 as tf
+tf.disable_v2_behavior()
 import numpy as np
+import matplotlib
+# matplotlib.use('Qt5Agg')
 
 
 class QMDPNet:
@@ -23,6 +28,7 @@ class QMDPNet:
         self.update_belief_op = None
         self.logits = None
         self.loss = None
+        self.belife_update = None
 
     def build_placeholders(self):
         """
@@ -108,6 +114,7 @@ class QMDPNet:
                 if step >= 1:
                     step_scope.reuse_variables()
                 b = FilterNet.beliefupdate(Z, b, act_in[step], obs_in[step], self.params)
+                self.belife_update = b
 
             # planner
             with tf.variable_scope("planner") as step_scope:
@@ -215,6 +222,10 @@ class QMDPNetPolicy():
         # evaluate QMDPNet
         logits, _ = self.sess.run([self.network.logits, self.network.update_belief_op], feed_dict=feed_dict)
         act = np.argmax(logits.flatten())
+
+        print(f'act!! {act}')
+        # plt.imshow(self.belief_img[0])
+        # plt.show()
 
         return act
 
@@ -350,6 +361,7 @@ class FilterNet():
         w_O = w_O[:,None,None] #tf.expand_dims(tf.expand_dims(w_O, axis=1), axis=1)
         Z_o = tf.reduce_sum(tf.multiply(Z, w_O), [3], keep_dims=False) # soft indexing
 
+        # print b - belife
         b_next = tf.multiply(b_prime_a, Z_o)
 
         # step 3: normalize over the state space

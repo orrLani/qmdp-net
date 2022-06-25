@@ -1,11 +1,14 @@
 import argparse, os, random, shutil
-import numpy as np, scipy.sparse
-import cPickle as pickle
-import tables
+import time
 
+import numpy as np, scipy.sparse
+import pickle
+import tables
+import matplotlib.pyplot as plt
 from utils import dijkstra
 from utils.dotdict import dotdict
 from utils.qmdp import QMDP
+import seaborn as sns
 
 try:
     import ipdb as pdb
@@ -64,8 +67,20 @@ class GridBase(object):
         goal_img = self.process_goals(goal_states)
         b0_img = self.process_beliefs(b0)
         policy.reset(env_img, goal_img, b0_img)
+        print('im_here!!')
 
+
+        if failed:
+            print(f'the model failed')
+        else:
+            print(f'the model sucsess')
+
+        map = self.grid.copy()
+        goal_state_coor = self.state_lin_to_bin(goal_states[0])
+        # plot state action and observation
         while True:
+            plt.ion()
+            figure, axis = plt.subplots(2)
             # finish if state is terminal, i.e. we reached a goal state
             if all([np.isclose(qmdp.T[x][state, state], 1.0) for x in range(params.num_action)]):
                 assert state in goal_states
@@ -82,6 +97,56 @@ class GridBase(object):
             else:
                 act = policy.eval(act, self.obs_lin_to_bin(obs))
 
+
+            # create first axes
+
+
+            action = ''
+            match act:
+                case 0:
+                    action = 'right'
+                case 1:
+                    action = 'down'
+                case 2:
+                    action = 'left'
+                case 3:
+                    action = 'up'
+                case 4:
+                    action = 'stay'
+                    # action
+
+            print(f' the action is {action}')
+            axis[0].title.set_text(f'next action to do is {action}')
+
+            # get the state
+            state_coor = self.state_lin_to_bin(state)
+            map[state_coor[0], state_coor[1]] = 2  # currant state
+
+            # get the goal state
+            goal_state_coor = self.state_lin_to_bin(goal_states[0])
+            map[goal_state_coor[0], goal_state_coor[1]] = 3
+
+            sns.heatmap(map, ax=axis[0],cmap="Greens")
+            # axis[0].matshow(map)
+            map[state_coor[0], state_coor[1]] = 0
+
+
+            # create second axes
+            # belife
+            belife = policy.sess.run([policy.network.belief])
+            print(len((belife)))
+
+            # reshape
+            belife = belife[0][0]
+            c = belife + self.grid
+            c[c >= 1] = 2
+            sns.heatmap(c, ax=axis[1],cmap="Blues")
+
+            plt.draw()
+            plt.pause(0.0001)
+            time.sleep(1)
+            plt.close('all')
+
             # simulate action
             state, r = qmdp.transition(state, act)
             obs = qmdp.random_obs(state, act)
@@ -94,6 +159,10 @@ class GridBase(object):
                 collisions += 1
 
             step_i += 1
+
+
+
+
 
         traj_len = step_i
 
@@ -341,9 +410,9 @@ class GridBase(object):
             D, path_pointers = dijkstra.Dijkstra(self.graph, goal_state)  # map of distances and predecessors
             if start_state in D:
                 break
-        else:
+        # else:
             # never succeeded
-            raise ValueError
+        #     raise ValueError
 
         return b0, start_state, goal_state
 
@@ -510,10 +579,9 @@ def generate_grid_data(path, N=30, M=30, num_env=10000, traj_per_env=5, Pmove_su
     params['num_state'] = params['grid_n']*params['grid_m']
     params['traj_limit'] = 4 * (params['grid_n'] + params['grid_m'])
     params['R_step'] = [params['R_step']] * params['num_action']
-
     # save params
     if not os.path.isdir(path): os.mkdir(path)
-    pickle.dump(dict(params), open(path + "/params.pickle", 'w'), -1)
+    pickle.dump(dict(params), open(path + "/params.pickle", 'wb'), -1)
 
     # randomize seeds, set to previous value to determinize random numbers
     np.random.seed()
@@ -563,7 +631,7 @@ def main():
     args = parser.parse_args()
 
     if os.path.isdir(args.path):
-        answer = raw_input("%s exists. Do you want to remove it(y/n)?" % args.path)
+        answer = input("%s exists. Do you want to remove it(y/n)?" % args.path)
         if answer != 'y':
             return
         shutil.rmtree(args.path)

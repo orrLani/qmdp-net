@@ -8,7 +8,7 @@ except Exception:
     import pdb
 
 
-class Datatable(collections.Sequence):
+class Datatable(collections.abc.Sequence):
     """
     Wrapper around pytable node that supports non-unique indexing
     """
