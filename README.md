@@ -15,6 +15,11 @@ The code implements the 2D grid navigation domain, and a QMDP-net with 2D state 
   3. good mood
 
 ### How to run the code
+1. clone the repo
+2. run the following command: conda create -n qmdp_env python=3.9
+3. active the virtual environment by running: conda activate qmdp_env
+4. install the requirements libraries with the command: pip install -r requirements.txt
+4. run the code :)
 
 
 
