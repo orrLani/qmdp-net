@@ -9,24 +9,8 @@ https://arxiv.org/abs/1703.06692
 
 The code implements the 2D grid navigation domain, and a QMDP-net with 2D state space in tensorflow.
 
-### Requirements
+### How to run the code
 
-Python 2.7  
-Tensorflow 1.3.0  
-Python packages: numpy, scipy, tables, pymdptoolbox, tensorpack
-
-To install these packages using pip:
-```
-pip install tensorflow
-pip install numpy scipy tables pymdptoolbox tensorpack==0.9.1
-```
-
-Optional: to speed up data generation download and install the latest version of pymdptoolbox
-```
-git clone https://github.com/sawcordwell/pymdptoolbox.git pymdptoolbox
-cd ./pymdptoolbox
-python setup.py install
-```
 
 
 ### Train and evaluate a QMDP-net
