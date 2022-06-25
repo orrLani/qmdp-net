@@ -99,8 +99,6 @@ class GridBase(object):
 
 
             # create first axes
-
-
             action = ''
             match act:
                 case 0:
