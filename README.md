@@ -9,6 +9,11 @@ https://arxiv.org/abs/1703.06692
 
 The code implements the 2D grid navigation domain, and a QMDP-net with 2D state space in tensorflow.
 
+### Requirement
+  1. python3.10
+  2. anconda
+  3. good mood
+
 ### How to run the code
 
 
