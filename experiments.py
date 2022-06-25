@@ -390,6 +390,10 @@ def generate_grid_data(path, N=30, M=30, num_env=10000, traj_per_env=5, Pmove_su
     print ("Done.")
 
 
+### runing the qmdp or runing the qmdpnet
+
+
+
 if __name__ == '__main__':
 
         # qmdp

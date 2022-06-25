@@ -189,7 +189,7 @@ def run_eval(params, modelfile):
         policy = QMDPNetPolicy(network, sess)
 
     # build dataflows
-    eval_feed = datafeed.Datafeed(params, filename="grid_10_world_0_0_0.example", mode="eval")
+    eval_feed = datafeed.Datafeed(params, filename=os.path.join(params.path, "test/data.hdf5"), mode="eval")
     df = eval_feed.build_eval_dataflow(policy=policy, repeats=params.eval_repeats)
     df.reset_state()
     time.sleep(0.2)
