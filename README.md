@@ -23,9 +23,12 @@ The code implements the 2D grid navigation domain, and a QMDP-net with 2D state 
 
 ### Demos
 
-qmdp - example
+qmdp example:
 https://user-images.githubusercontent.com/54217343/175830057-0a68a8ef-6281-4a69-8682-fceae6a16054.mp4
 
+qmdp-net  example:
+
+https://user-images.githubusercontent.com/54217343/175831651-622b3237-dd20-43b9-a6ef-5c98c1fcc00a.mp4
 
 
 
