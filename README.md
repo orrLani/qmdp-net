@@ -27,11 +27,16 @@ qmdp example:
 
 https://user-images.githubusercontent.com/54217343/175830057-0a68a8ef-6281-4a69-8682-fceae6a16054.mp4
 
+
 qmdp-net  example:
+
+qmdp-net with Pmove_succ=1 and Pobs_succ=1
 
 https://user-images.githubusercontent.com/54217343/175831651-622b3237-dd20-43b9-a6ef-5c98c1fcc00a.mp4
 
+qmdp-net with Pmove_succ=0.9 and Pobs_succ=0.9
 
+https://user-images.githubusercontent.com/54217343/175917134-c0e95a4d-9a64-4ef8-ac27-86a8c8c5f981.mp4
 
 ### Train and evaluate a QMDP-net
 
