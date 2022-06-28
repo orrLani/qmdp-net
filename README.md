@@ -21,6 +21,14 @@ The code implements the 2D grid navigation domain, and a QMDP-net with 2D state 
 4. install the requirements libraries with the command: pip install -r requirements.txt
 4. run the code :)
 
+
+### Presentation
+
+
+[Presentation (3) (1).pptx](https://github.com/orrLani/qmdp-net/files/8999851/Presentation.3.1.pptx)
+
+
+
 ### Demos
 
 qmdp example:
