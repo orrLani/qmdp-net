@@ -15,6 +15,7 @@ from qmdpnet import QMDPNet,QMDPNetPolicy
 tf.disable_v2_behavior()
 import seaborn as sns
 
+SAVE_IMG = True
 # self.world == 1 this mean the hallway world
 class Grid(GridBase):
     def __init__(self,params, world=0):
@@ -32,30 +33,17 @@ class Grid(GridBase):
             grid[:, 0] = OBSTACLE
             grid[:, -1] = OBSTACLE
 
+
         if self.world == 1:
             # create world 10 by 10
             grid = np.zeros([10, 10])
             grid[0, :] = OBSTACLE
-            grid[9, :] = OBSTACLE
+            grid[-1, :] = OBSTACLE
             grid[:, 0] = OBSTACLE
-            grid[:, 1] = OBSTACLE
-            grid[:, 3] = OBSTACLE
-            grid[:, 6] = OBSTACLE
-            grid[:, 8] = OBSTACLE
-            grid[:, 9] = OBSTACLE
+            grid[:, -1] = OBSTACLE
 
-            grid[3, 1] = 0
-            grid[6, 1] = 0
-            grid[3, 8] = 0
-            grid[6, 8] = 0
 
-            grid[1, 3] = 0
-            grid[1, 4] = 0
-            grid[1, 6] = 0
 
-            grid[8, 3] = 0
-            grid[8, 4] = 0
-            grid[8, 6] = 0
 
             plt.imshow(grid)
             plt.show()
@@ -74,12 +62,18 @@ class Grid(GridBase):
             rand_field = np.random.rand(10, 10)
             grid = np.array(np.logical_or(grid, (rand_field < 0.2)), 'i')
 
-
         if self.world == 3:
             with open('test_20_20.npy', 'rb') as f:
                 _ = np.load(f)
                 grid = np.load(f)
                 _ = np.load(f)
+
+
+        if self.world == 4:
+            grid = np.load('maze_array.npy')
+
+        if self.world == 5:
+            grid = self.random_grid(15, 15, self.params.Pobst)
 
         #  pass
 
@@ -93,12 +87,19 @@ class Grid(GridBase):
 
         if self.world == 0:
             # where to put b0:
-            b0size = 4
+            b0size = 8
             b0ind = np.array([
-            self.state_bin_to_lin((2, 8)),
-            self.state_bin_to_lin((8, 8)),
-            self.state_bin_to_lin((6, 8)),
-            self.state_bin_to_lin((5, 8))])
+            self.state_bin_to_lin((8, 2)),
+            self.state_bin_to_lin((2, 2)),
+            self.state_bin_to_lin((3 ,2)),
+            self.state_bin_to_lin((4, 2)),
+            self.state_bin_to_lin((5, 2)),
+            self.state_bin_to_lin((6, 2)),
+            self.state_bin_to_lin((7, 2)),
+            self.state_bin_to_lin((8, 2))
+            ])
+            # self.state_bin_to_lin((6, 8)),
+            # self.state_bin_to_lin((5, 8))])
             # self.state_bin_to_lin((3, 1)),
             # self.state_bin_to_lin((4, 1)),
             # self.state_bin_to_lin((5, 1)),
@@ -109,31 +110,26 @@ class Grid(GridBase):
             b0 = np.zeros([self.num_state])
             b0[b0ind] = 1.0 / b0size
 
+            start_state = self.state_bin_to_lin((2, 2))
 
-
-            start_state = self.state_bin_to_lin((2, 8))
-
-            goal_states = [self.state_bin_to_lin((6, 5))]
+            goal_states = [self.state_bin_to_lin((8, 8))
+                           ]
 
 
         if self.world == 1:
             # where to put b0:
-            state_start_1 = self.state_bin_to_lin((6, 4))
-            state_start_2 = self.state_bin_to_lin((6, 5))
-            state_start_3 = self.state_bin_to_lin((3, 4))
-            state_start_4 = self.state_bin_to_lin((3, 5))
+            state_start_1 = self.state_bin_to_lin((3, 1))
+            state_start_2 = self.state_bin_to_lin((6, 1))
+            state_start_3 = self.state_bin_to_lin((3, 8))
             state_finish_1 = self.state_bin_to_lin((6, 8))
-            state_finish_2 = self.state_bin_to_lin((3, 8))
-            state_finish_3 = self.state_bin_to_lin((3, 1))
-            state_finish_4 = self.state_bin_to_lin((6, 1))
-            b0size = 4
-            b0ind = [state_start_1, state_start_2, state_start_3, state_start_4]
+            b0size = 3
+            b0ind = [state_start_1, state_start_2,state_start_3]
             b0 = np.zeros([self.num_state])
             b0[b0ind] = 1.0 / b0size
 
             start_state = state_start_1
 
-            goal_states = [state_finish_1,state_finish_2,state_finish_3,state_finish_4]
+            goal_states = [state_finish_1]
 
 
         if self.world == 2:
@@ -158,6 +154,29 @@ class Grid(GridBase):
                 goal_states = np.load(f)
 
 
+        if self.world == 4:
+            state_start_1 = self.state_bin_to_lin((1, 3))
+            state_start_2 = self.state_bin_to_lin((12, 14))
+            state_start_3 = self.state_bin_to_lin((18, 12))
+
+            b0size = 3
+            b0ind = [state_start_1,state_start_2,state_start_3]
+            b0 = np.zeros([self.num_state])
+            b0[b0ind] = 1.0 / b0size
+            start_state = np.random.choice(self.num_state, p=b0)
+            state_finish_1 = self.state_bin_to_lin((18, 1))
+            goal_states = [state_finish_1]
+
+        if self.world == 5:
+            state_start_1 = self.state_bin_to_lin((1, 1))
+            state_start_2 = self.state_bin_to_lin((1, 13))
+            b0size = 2
+            b0ind = [state_start_1,state_start_2]
+            b0 = np.zeros([self.num_state])
+            b0[b0ind] = 1.0 / b0size
+            start_state = np.random.choice(self.num_state, p=b0)
+            state_finish_1 = self.state_bin_to_lin((9, 8))
+            goal_states = [state_finish_1]
 
 
         return b0, start_state, goal_states
@@ -195,7 +214,7 @@ class Grid(GridBase):
 
         beliefs = []  # includes start and goal
         states = []  # includes start and goal
-        actions = [4]  # first action is always stay. Excludes action after reaching goal
+        actions = []  # first action is always stay. Excludes action after reaching goal
         observs = []  # Includes observation at start but excludes observation after reaching goal
 
         collisions = 0
@@ -207,6 +226,7 @@ class Grid(GridBase):
             states.append(state)
 
             # finish if state is terminal, i.e. we reached a goal state
+            # [np.isclose(qmdp.T[0][state, state], 1.0) and qmdp.T[1][state, state], 1.0)...
             if all([np.isclose(qmdp.T[x][state, state], 1.0) for x in range(params.num_action)]):
                 assert state in goal_states
                 break
@@ -217,11 +237,11 @@ class Grid(GridBase):
                 break
 
             # choose action
-            if step_i == 0:
+            #if step_i == 0:
                 # dummy first action
-                act = params.stayaction
-            else:
-                act = qmdp.qmdp_action(b)
+            #    act = params.stayaction
+            #else:
+            act = qmdp.qmdp_action(b)
 
             # simulate action
             state, r = qmdp.transition(state, act)
@@ -241,7 +261,7 @@ class Grid(GridBase):
 
         print(f'the len is {len(states)}')
         # plots
-        self.plot(goal_states, failed, actions, states, beliefs)
+        self.plot_qmdp(goal_states, failed, actions, states, beliefs)
 
         # add to database
         if not failed:
@@ -267,6 +287,78 @@ class Grid(GridBase):
 
 
 
+    def plot_qmdp(self,goal_states,failed,actions,states,beliefs):
+
+        i = 0
+        # show state
+        map = self.grid.copy()
+        goal_state_coor = self.state_lin_to_bin(goal_states[0])
+
+
+
+        # goal state
+        map[goal_state_coor[0], goal_state_coor[1]] = 3
+        # fig, axs = plt.subplots(2)
+
+        # fig = plt.figure()
+
+        if failed:
+            failed = 'failed'
+        else:
+            failed = 'not failed'
+        print(f'the model is {failed} to go to the goal')
+
+        actions.append('finish!')
+        i = 0
+        for a, s, b in zip(actions, states, beliefs):
+
+            plt.ion()
+            figure, axis = plt.subplots(2)
+            print(i)
+            action = ''
+            i += 1
+            match a:
+                case 0:
+                    action = 'right'
+                case 1:
+                    action = 'down'
+                case 2:
+                    action = 'left'
+                case 3:
+                    action = 'up'
+                case 4:
+                    action = 'stay'
+                    # action
+            print(f' the action is {action}')
+            # 0, 1, 2, 3, 4,  # right, down, left, up, stay
+
+
+            axis[0].title.set_text(action)
+
+            # get the state
+            state_coor = self.state_lin_to_bin(s)
+            print(f'the state is {state_coor}')
+            map[state_coor[0], state_coor[1]] = 2 # currant state
+            sns.heatmap(map, ax=axis[0],cmap="Greens")
+
+            map[state_coor[0], state_coor[1]] = 0
+
+            # belife
+            if type(b) != np.ndarray:
+                 b = b.toarray()
+            b = b.reshape(self.N, self.M)
+            # b = np.log(b)
+            c = b + self.grid
+            c[c >= 1] = 2
+            c[c <=0.01] = 0
+            sns.heatmap(c, ax=axis[1], cmap="Blues",annot=True)
+
+            plt.draw()
+            if SAVE_IMG:
+                plt.savefig(f'save_files/image{i}.png')
+            plt.pause(0.0001)
+            time.sleep(3)
+            plt.close('all')
 
 
 
@@ -325,23 +417,21 @@ def generate_grid_data(path, N=30, M=30, num_env=10000, traj_per_env=5, Pmove_su
     print ("Done.")
 
 
-### runing the qmdp or runing the qmdpnet
-
 
 
 if __name__ == '__main__':
 
         # qmdp
-        #generate_grid_data('experiments', N=18, M=18, num_env=1, traj_per_env=10,
-        #               Pmove_succ=0.2, Pobs_succ=0.2,world=0)
+        generate_grid_data('grid_4_world_pmove', N=20, M=20, num_env=1, traj_per_env=10,
+                       world=4,Pmove_succ=0.9, Pobs_succ=0.9)
 
         # gmdp with 10
-        generate_grid_data('grid_10_world_0_0_0', N=10, M=10, num_env=1, traj_per_env=10,
-                    world=0)
+        # generate_grid_data('grid_10_world_0_0_0_0', N=10, M=10, num_env=1, traj_per_env=10,
+        #            Pmove_succ= 0.7 ,world=1)
 
 
-        # generate_grid_data('grid_20_20_failed', N=20, M=20, num_env=1, traj_per_env=10,
-        #              Pmove_succ=1, Pobs_succ=1,world=3)
+        # generate_grid_data('grid_20_20', N=20, M=20, num_env=1, traj_per_env=10,
+        #              Pmove_succ=1, Pobs_succ=1,world=4)
 
 
 
