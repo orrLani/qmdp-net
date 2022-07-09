@@ -241,7 +241,7 @@ class Grid(GridBase):
 
         print(f'the len is {len(states)}')
         # plots
-        self.plot_qmdp(goal_states, failed, actions, states, beliefs)
+        self.plot(goal_states, failed, actions, states, beliefs)
 
         # add to database
         if not failed:
@@ -267,72 +267,7 @@ class Grid(GridBase):
 
 
 
-    def plot_qmdp(self,goal_states,failed,actions,states,beliefs):
 
-        i = 0
-        # show state
-        map = self.grid.copy()
-        goal_state_coor = self.state_lin_to_bin(goal_states[0])
-
-
-        # goal state
-        map[goal_state_coor[0], goal_state_coor[1]] = 3
-        # fig, axs = plt.subplots(2)
-
-        # fig = plt.figure()
-
-        if failed:
-            failed = 'failed'
-        else:
-            failed = 'not failed'
-        print(f'the model is {failed} to go to the goal')
-        i = 0
-        for a, s, b in zip(actions, states, beliefs):
-
-            plt.ion()
-            figure, axis = plt.subplots(2)
-            print(i)
-            action = ''
-            i += 1
-            match a:
-                case 0:
-                    action = 'right'
-                case 1:
-                    action = 'down'
-                case 2:
-                    action = 'left'
-                case 3:
-                    action = 'up'
-                case 4:
-                    action = 'stay'
-                    # action
-            print(f' the action is {action}')
-            # 0, 1, 2, 3, 4,  # right, down, left, up, stay
-
-
-            axis[0].title.set_text(action)
-
-            # get the state
-            state_coor = self.state_lin_to_bin(s)
-            print(f'the state is {state_coor}')
-            map[state_coor[0], state_coor[1]] = 2 # currant state
-            sns.heatmap(map, ax=axis[0],cmap="Greens")
-
-            map[state_coor[0], state_coor[1]] = 0
-
-            # belife
-            if type(b) != np.ndarray:
-                 b = b.toarray()
-            b = b.reshape(self.N, self.M)
-            c = b + self.grid
-            c[c >= 1] = 2
-
-            sns.heatmap(c, ax=axis[1], cmap="Blues", annot=True)
-
-            plt.draw()
-            plt.pause(0.0001)
-            time.sleep(3)
-            plt.close('all')
 
 
 def generate_grid_data(path, N=30, M=30, num_env=10000, traj_per_env=5, Pmove_succ=1, Pobs_succ=1, world=1):
