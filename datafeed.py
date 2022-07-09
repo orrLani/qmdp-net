@@ -276,6 +276,9 @@ class EvalDataFeed(dataflow.ProxyDataFlow):
         _, _, _, traj_len, collisions, failed = db_sample
         state, act_last, linear_obs = db_step
 
+        if failed:
+            print('qmdp is failed')
+
         collided = np.min([collisions, 1])
         success = (1 if failed == 0 else 0)
 

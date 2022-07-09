@@ -223,7 +223,7 @@ class QMDPNetPolicy():
         logits, _ = self.sess.run([self.network.logits, self.network.update_belief_op], feed_dict=feed_dict)
         act = np.argmax(logits.flatten())
 
-        print(f'act!! {act}')
+        # print(f'act!! {act}')
         # plt.imshow(self.belief_img[0])
         # plt.show()
 

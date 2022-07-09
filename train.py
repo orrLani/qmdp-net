@@ -189,7 +189,8 @@ def run_eval(params, modelfile):
         policy = QMDPNetPolicy(network, sess)
 
     # build dataflows
-    eval_feed = datafeed.Datafeed(params, filename=os.path.join(params.path, "test/data.hdf5"), mode="eval")
+    eval_feed = datafeed.Datafeed(params, filename="data/grid20/test/data.hdf5", mode="eval")
+    # eval_feed = datafeed.Datafeed(params, filename=os.path.join(params.path, "test/data.hdf5"), mode="eval")
     df = eval_feed.build_eval_dataflow(policy=policy, repeats=params.eval_repeats)
     df.reset_state()
     time.sleep(0.2)
@@ -219,8 +220,14 @@ def run_eval(params, modelfile):
 
 def main(arglist):
     params = parse_args(arglist)
-    print(params)
+    #params['grid_n'] = 20
+    params['grid_m'] = 20
+    params['grid_n'] = 20
+    params['Pmove_succ'] = 0.9
+    params['Pobs_succ'] = 0.9
+    params['K'] = 450
 
+    print(params)
     if params.epochs == 0:
         assert len(params.loadmodel) == 1
         modelfile = params.loadmodel[0]

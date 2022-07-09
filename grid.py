@@ -18,7 +18,8 @@ except Exception:
 
 FREESTATE = 0.0
 OBSTACLE = 1.0
-
+i = 0
+SAVE_IMG = True
 
 class GridBase(object):
     def __init__(self, params):
@@ -67,18 +68,22 @@ class GridBase(object):
         goal_img = self.process_goals(goal_states)
         b0_img = self.process_beliefs(b0)
         policy.reset(env_img, goal_img, b0_img)
-        print('im_here!!')
-
 
         actions = []
-        states = []
-        beliefs = []
+        # print('im_here!!')
 
+
+        if failed:
+            print(f'the model failed')
+        else:
+            print(f'the model sucsess')
+
+        map = self.grid.copy()
+        goal_state_coor = self.state_lin_to_bin(goal_states[0])
         # plot state action and observation
         while True:
-
-            # plt.ion()
-            # figure, axis = plt.subplots(2)
+            plt.ion()
+            figure, axis = plt.subplots(2)
             # finish if state is terminal, i.e. we reached a goal state
             if all([np.isclose(qmdp.T[x][state, state], 1.0) for x in range(params.num_action)]):
                 assert state in goal_states
@@ -96,16 +101,58 @@ class GridBase(object):
                 act = policy.eval(act, self.obs_lin_to_bin(obs))
 
 
+            action = ''
+            match act:
+                case 0:
+                    action = 'right'
+                case 1:
+                    action = 'down'
+                case 2:
+                    action = 'left'
+                case 3:
+                    action = 'up'
+                case 4:
+                    action = 'stay'
+                    # action
 
+            # print(f' the action is {action}')
+            axis[0].title.set_text(f'{action}')
 
+            # get the state
+            state_coor = self.state_lin_to_bin(state)
+            map[state_coor[0], state_coor[1]] = 2  # currant state
+
+            # get the goal state
+            goal_state_coor = self.state_lin_to_bin(goal_states[0])
+            map[goal_state_coor[0], goal_state_coor[1]] = 3
+
+            # sns.heatmap(map, ax=axis[0],cmap="Greens")
+            sns.heatmap(map, ax=axis[0],cmap="Greens")
+            map[state_coor[0], state_coor[1]] = 0
+
+            # create second axes
+            # belife
             belife = policy.sess.run([policy.network.belief])
             print(len((belife)))
 
             # reshape
             belife = belife[0][0]
-            beliefs.append(belife)
-            states.append(state)
-            actions.append(act)
+            c = belife + self.grid
+
+            c[c <=0.01] = 0
+            c[c >= 1] = 2
+
+            sns.heatmap(c, ax=axis[1],cmap="Blues",annot=True)
+
+            plt.draw()
+            if SAVE_IMG:
+                global i
+                plt.savefig(f'save_files_qmdpnet/image{i}.png')
+                i+=1
+            plt.pause(0.0001)
+            time.sleep(1)
+
+            plt.close('all')
 
             # simulate action
             state, r = qmdp.transition(state, act)
@@ -120,8 +167,9 @@ class GridBase(object):
 
             step_i += 1
 
-        self.plot(goal_states, failed, actions, states, beliefs)
+
         traj_len = step_i
+        print(f'the traj_len is {traj_len}')
 
         return (not failed), traj_len, collisions, reward_sum
 
@@ -294,7 +342,7 @@ class GridBase(object):
         """
         params = self.params
         Pmove_succ = params.Pmove_succ
-
+        # Pmove_succ = 0.7
         # T, R does not capture goal state, it must be incorporated later
         T = [scipy.sparse.lil_matrix((self.num_state, self.num_state), dtype='f')
              for x in range(self.num_action)]  # probability of transition with a0 from s1 to s2
@@ -501,74 +549,6 @@ class GridBase(object):
             return b.astype('f')
 
         return b
-
-
-    def plot(self,goal_states,failed,actions,states,beliefs):
-
-        i = 0
-        # show state
-        map = self.grid.copy()
-        goal_state_coor = self.state_lin_to_bin(goal_states[0])
-
-
-        # goal state
-        map[goal_state_coor[0], goal_state_coor[1]] = 3
-        # fig, axs = plt.subplots(2)
-
-        # fig = plt.figure()
-
-        if failed:
-            failed = 'failed'
-        else:
-            failed = 'not failed'
-        print(f'the model is {failed} to go to the goal')
-        i = 0
-        for a, s, b in zip(actions, states, beliefs):
-
-            plt.ion()
-            figure, axis = plt.subplots(2)
-            print(i)
-            action = ''
-            i += 1
-            match a:
-                case 0:
-                    action = 'right'
-                case 1:
-                    action = 'down'
-                case 2:
-                    action = 'left'
-                case 3:
-                    action = 'up'
-                case 4:
-                    action = 'stay'
-                    # action
-            print(f' the action is {action}')
-            # 0, 1, 2, 3, 4,  # right, down, left, up, stay
-
-
-            axis[0].title.set_text(action)
-
-            # get the state
-            state_coor = self.state_lin_to_bin(s)
-            print(f'the state is {state_coor}')
-            map[state_coor[0], state_coor[1]] = 2 # currant state
-            sns.heatmap(map, ax=axis[0],cmap="Greens")
-
-            map[state_coor[0], state_coor[1]] = 0
-
-            # belife
-            if type(b) != np.ndarray:
-                 b = b.toarray()
-            b = b.reshape(self.N, self.M)
-            c = b + self.grid
-            c[c >= 1] = 2
-
-            sns.heatmap(c, ax=axis[1], cmap="Blues", annot=True)
-
-            plt.draw()
-            plt.pause(0.0001)
-            time.sleep(3)
-            plt.close('all')
 
 
 def generate_grid_data(path, N=30, M=30, num_env=10000, traj_per_env=5, Pmove_succ=1.0, Pobs_succ=1.0):
