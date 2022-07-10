@@ -47,7 +47,7 @@ https://user-images.githubusercontent.com/54217343/175919833-51faadf7-8a03-4daf-
 
 
 
-qmdp-net  example:
+qmdp-net that train on 10*10 grid world example:
 
 qmdp-net with pmove_succ=1 and pobs_succ=1
 
