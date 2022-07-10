@@ -429,12 +429,15 @@ def run_qmdp_net():
     modelfile = params.loadmodel[0]
     run_eval(params, modelfile,run_experiment=True)
 
+RUN = 1
 if __name__ == '__main__':
 
+    if RUN == 1:
         # qmdp
         generate_grid_data('grid_4_world_pmove', N=20, M=20, num_env=1, traj_per_env=10,
                        world=4,Pmove_succ=0.9, Pobs_succ=0.9)
 
+    if RUN == 2:
         # qmdp-net
         run_qmdp_net()
 
