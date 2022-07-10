@@ -28,8 +28,8 @@ The code implements the 2D grid navigation domain, and a QMDP-net with 2D state 
 [Presentation (3) (1).pptx](https://github.com/orrLani/qmdp-net/files/8999851/Presentation.3.1.pptx)
 
 ### Definitions
-  Pmove_succ: probability of transition succeeding, otherwise stays in place
-  Pobs_succ: probability of correct observation, independent in each direction
+  1. Pmove_succ: probability of transition succeeding, otherwise stays in place
+  2. Pobs_succ: probability of correct observation, independent in each direction
    
 ### Demos
 
