@@ -27,7 +27,7 @@ def run_training(params):
     Train qmdp-net.
     """
     # build dataflows
-    datafile = os.path.join(params.path, "train/data.hdf5")
+    datafile = os.path.join(params.path, "train/grid_20_20.hdf5")
     train_feed = datafeed.Datafeed(params, filename=datafile, mode="train", max_env=params.training_envs)
     valid_feed = datafeed.Datafeed(params, filename=datafile, mode="valid", min_env=params.training_envs)
 
@@ -165,7 +165,7 @@ def run_training(params):
     return checkpoint_file
 
 
-def run_eval(params, modelfile):
+def run_eval(params, modelfile,run_experiment=False):
     # built model into the
     #
     #
@@ -189,8 +189,10 @@ def run_eval(params, modelfile):
         policy = QMDPNetPolicy(network, sess)
 
     # build dataflows
-    eval_feed = datafeed.Datafeed(params, filename="data/grid20/test/data.hdf5", mode="eval")
-    # eval_feed = datafeed.Datafeed(params, filename=os.path.join(params.path, "test/data.hdf5"), mode="eval")
+    if run_experiment:
+        eval_feed = datafeed.Datafeed(params, filename="grid_20_20.hdf5", mode="eval")
+    else:
+        eval_feed = datafeed.Datafeed(params, filename=os.path.join(params.path, "test/grid_20_20.hdf5"), mode="eval")
     df = eval_feed.build_eval_dataflow(policy=policy, repeats=params.eval_repeats)
     df.reset_state()
     time.sleep(0.2)

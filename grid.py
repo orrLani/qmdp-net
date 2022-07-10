@@ -19,7 +19,7 @@ except Exception:
 FREESTATE = 0.0
 OBSTACLE = 1.0
 i = 0
-SAVE_IMG = True
+SAVE_IMG = False
 
 class GridBase(object):
     def __init__(self, params):
@@ -596,7 +596,7 @@ def generate_grid_data(path, N=30, M=30, num_env=10000, traj_per_env=5, Pmove_su
     domain = GridBase(params)
 
     # make database file
-    db = GridBase.create_db(path+"data.hdf5", params, num_env, traj_per_env)
+    db = GridBase.create_db(path+"grid_20_20.hdf5", params, num_env, traj_per_env)
 
     for env_i in range(num_env):
         print ("Generating env %d with %d trajectories "%(env_i, traj_per_env))

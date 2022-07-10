@@ -14,8 +14,8 @@ import tensorflow.compat.v1 as tf
 from qmdpnet import QMDPNet,QMDPNetPolicy
 tf.disable_v2_behavior()
 import seaborn as sns
-
-SAVE_IMG = True
+from train import parse_args,run_eval
+SAVE_IMG = False
 # self.world == 1 this mean the hallway world
 class Grid(GridBase):
     def __init__(self,params, world=0):
@@ -417,13 +417,27 @@ def generate_grid_data(path, N=30, M=30, num_env=10000, traj_per_env=5, Pmove_su
     print ("Done.")
 
 
-
+def run_qmdp_net():
+    arglist = ['./data/grid10/', '--loadmodel', './data/grid10/trained-model/final.chk',
+               '--epochs', '0', '--lim_traj_len', '100']
+    params = parse_args(arglist)
+    params['grid_m'] = 20
+    params['grid_n'] = 20
+    params['Pmove_succ'] = 0.9
+    params['Pobs_succ'] = 0.9
+    params['K'] = 450
+    modelfile = params.loadmodel[0]
+    run_eval(params, modelfile,run_experiment=True)
 
 if __name__ == '__main__':
 
         # qmdp
         generate_grid_data('grid_4_world_pmove', N=20, M=20, num_env=1, traj_per_env=10,
                        world=4,Pmove_succ=0.9, Pobs_succ=0.9)
+
+        # qmdp-net
+        run_qmdp_net()
+
 
         # gmdp with 10
         # generate_grid_data('grid_10_world_0_0_0_0', N=10, M=10, num_env=1, traj_per_env=10,

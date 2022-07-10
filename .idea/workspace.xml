@@ -4,7 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="62d5d69a-6743-4bfc-8c77-b1fd178eab91" name="Changes" comment="">
+    <list default="true" id="62d5d69a-6743-4bfc-8c77-b1fd178eab91" name="Changes" comment="git update files">
       <change beforePath="$PROJECT_DIR$/data/grid10New/train/data.hdf5" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/data/grid10New/train/params.pickle" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/data/grid18/train/data.hdf5" beforeDir="false" />
@@ -14,7 +14,10 @@
       <change beforePath="$PROJECT_DIR$/data/grid20/train/data.hdf5" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/data/grid20/train/params.pickle" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/experiments.py" beforeDir="false" afterPath="$PROJECT_DIR$/experiments.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/grid.py" beforeDir="false" afterPath="$PROJECT_DIR$/grid.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/grid_10_world_0_0_0.example" beforeDir="false" afterPath="$PROJECT_DIR$/grid_20_20.hdf5" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/grid_10_world_0_0_0/params.pickle" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/train.py" beforeDir="false" afterPath="$PROJECT_DIR$/train.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -55,7 +58,7 @@
       <recent name="$PROJECT_DIR$" />
     </key>
   </component>
-  <component name="RunManager" selected="Python.train">
+  <component name="RunManager" selected="Python.experiments">
     <configuration name="experiments" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
       <module name="qmdp-net" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -129,8 +132,8 @@
     </list>
     <recent_temporary>
       <list>
-        <item itemvalue="Python.train" />
         <item itemvalue="Python.experiments" />
+        <item itemvalue="Python.train" />
         <item itemvalue="Python.grid" />
       </list>
     </recent_temporary>
@@ -146,8 +149,23 @@
       <workItem from="1656149505567" duration="3503000" />
       <workItem from="1656169223299" duration="4660000" />
       <workItem from="1656174450331" duration="250000" />
-      <workItem from="1657376135691" duration="426000" />
+      <workItem from="1657376135691" duration="2068000" />
     </task>
+    <task id="LOCAL-00001" summary="add experiments and maze_array.npy">
+      <created>1657376601873</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1657376601873</updated>
+    </task>
+    <task id="LOCAL-00002" summary="git update files">
+      <created>1657376840550</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1657376840550</updated>
+    </task>
+    <option name="localTasksCounter" value="3" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -164,9 +182,14 @@
       </map>
     </option>
   </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="add experiments and maze_array.npy" />
+    <MESSAGE value="git update files" />
+    <option name="LAST_COMMIT_MESSAGE" value="git update files" />
+  </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
     <SUITE FILE_PATH="coverage/qmdp_net$grid.coverage" NAME="grid Coverage Results" MODIFIED="1656159666579" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
-    <SUITE FILE_PATH="coverage/qmdp_net$experiments.coverage" NAME="experiments Coverage Results" MODIFIED="1656171077804" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
-    <SUITE FILE_PATH="coverage/qmdp_net$train.coverage" NAME="train Coverage Results" MODIFIED="1656174597691" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/qmdp_net$experiments.coverage" NAME="experiments Coverage Results" MODIFIED="1657433853212" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/qmdp_net$train.coverage" NAME="train Coverage Results" MODIFIED="1657433162232" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
   </component>
 </project>
