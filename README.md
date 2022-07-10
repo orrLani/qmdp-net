@@ -32,6 +32,7 @@ The code implements the 2D grid navigation domain, and a QMDP-net with 2D state 
   2. Pobs_succ: probability of correct observation, independent in each direction
    
 ### Demos
+We created demos to show the movement of the robot.
 
 qmdp example:
 
